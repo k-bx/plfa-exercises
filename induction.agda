@@ -156,3 +156,5 @@ open import Data.Nat using (ℕ; zero; suc; _+_; _*_; _∸_)
 -- m + (n + p) ≡ n + (m + p)
 -- for all naturals m, n, and p. No induction is needed, just apply the previous results which show addition is associative and commutative.
 --
++-swap : ∀ (m n p : ℕ) → m + (n + p) ≡ n + (m + p)
++-swap m n p rewrite +-comm′ m (n + p) | +-comm′ m p | +-assoc′ n p m = refl
