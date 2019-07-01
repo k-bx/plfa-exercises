@@ -3,7 +3,7 @@ module induction where
 import Relation.Binary.PropositionalEquality as Eq
 open Eq using (_≡_; refl; cong; sym)
 open Eq.≡-Reasoning using (begin_; _≡⟨⟩_; _≡⟨_⟩_; _∎)
-open import Data.Nat using (ℕ; zero; suc; _+_; _*_; _∸_)
+open import Data.Nat using (ℕ; zero; suc; _+_; _*_; _∸_; _^_)
 
 +-assoc : ∀ (m n p : ℕ) → (m + n) + p ≡ m + (n + p)
 +-assoc zero n p =
@@ -235,6 +235,30 @@ unsuceq m n = λ x → cong (_∸ 1) x
 --
 -- for all naturals n. Did your proof require induction?
 --
-exMonus : ∀ (n : ℕ) → 0 ∸ n ≡ 0
-exMonus zero = refl
-exMonus (suc n) = refl
+ex-0∸n≡0 : ∀ (n : ℕ) → 0 ∸ n ≡ 0
+ex-0∸n≡0 zero = refl
+ex-0∸n≡0 (suc n) = refl
+
+--
+-- Exercise +*^ (stretch)
+--
+-- Show the following three laws
+--
+-- m ^ (n + p) ≡ (m ^ n) * (m ^ p)
+-- (m * n) ^ p ≡ (m ^ p) * (n ^ p)
+-- m ^ (n * p) ≡ (m ^ n) ^ p
+--
+-- for all m, n, and p.
+--
+*-assoc : ∀ (m n p : ℕ) → (m * n) * p ≡ m * (n * p)
+*-assoc zero n p = refl
+*-assoc (suc m) n p rewrite *-distrib-+ n (m * n) p | *-assoc m n p = refl
+
+ex-+*^-part1 : ∀ (m n p : ℕ) → m ^ (n + p) ≡ (m ^ n) * (m ^ p)
+ex-+*^-part1 m zero zero = refl
+ex-+*^-part1 m zero (suc p) rewrite +-identityʳ (m * (m ^ p)) = refl
+ex-+*^-part1 m (suc n) zero rewrite +-identityʳ n | *-identityʳ (m * (m ^ n)) = refl
+ex-+*^-part1 m (suc n) (suc p)
+  rewrite ex-+*^-part1 m n (suc p)
+  | *-assoc m (m ^ n) (m * (m ^ p))
+  = refl
