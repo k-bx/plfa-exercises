@@ -227,3 +227,14 @@ unsuceq m n = λ x → cong (_∸ 1) x
   | +-comm n m
   | +-assoc m n (n * m)
   = refl
+
+--
+-- Exercise 0∸n≡0
+-- Show
+-- zero ∸ n ≡ zero
+--
+-- for all naturals n. Did your proof require induction?
+--
+exMonus : ∀ (n : ℕ) → 0 ∸ n ≡ 0
+exMonus zero = refl
+exMonus (suc n) = refl
