@@ -182,12 +182,48 @@ open import Data.Nat using (ℕ; zero; suc; _+_; _*_; _∸_)
   | +-assoc p (m * p) (p + n * p)
   = refl
 
-unsuc : ∀ (m n : ℕ) → suc m ≡ suc n → m ≡ n
-unsuc m n = λ x → {!!}
+-- _∸_ : ℕ → ℕ → ℕ
+-- m     ∸ zero   =  m
+-- zero  ∸ suc n  =  zero
+-- suc m ∸ suc n  =  m ∸ n
+
+unsuceq : ∀ (m n : ℕ) → suc m ≡ suc n → m ≡ n
+unsuceq m n = λ x → cong (_∸ 1) x
 
 +-striphead : ∀ (p m n : ℕ) → (p + m ≡ p + n) → (m ≡ n)
-+-striphead p m n = {!!}
++-striphead p m n x = {!!}
+
+*-zero-zero : ∀ (n : ℕ) → n * zero ≡ zero
+*-zero-zero zero = refl
+*-zero-zero (suc n) rewrite *-zero-zero n = refl
+
+*-identityʳ : ∀ (n : ℕ) → n * 1 ≡ n
+*-identityʳ zero = refl
+*-identityʳ (suc n) rewrite *-identityʳ n = refl
+
+*-suc1 : ∀ (m n : ℕ) → m * suc n ≡ m + m * n
+*-suc1 zero n = refl
+*-suc1 (suc m) zero rewrite *-zero-zero m
+  | +-identityʳ m
+  | *-identityʳ m = refl
+*-suc1 (suc m) (suc n)
+  rewrite
+    -- sym (+-suc n (m * suc (suc n)))
+  *-suc1 m (suc n)
+  | +-suc m (n + m * suc n)
+  | sym (+-assoc n m (m * suc n))
+  | +-comm n m
+  | +-assoc m n (m * suc n)
+  = refl
 
 *-comm : ∀ (m n : ℕ) → m * n ≡ n * m
-*-comm zero n = {!!}
-*-comm (suc m) n = {!!}
+*-comm zero n rewrite *-zero-zero n = refl
+*-comm (suc m) zero rewrite *-zero-zero (suc m) = refl
+*-comm (suc m) (suc n)
+  rewrite *-suc1 m n
+  | *-suc1 n m
+  | *-comm m n
+  | sym (+-assoc n m (n * m))
+  | +-comm n m
+  | +-assoc m n (n * m)
+  = refl
