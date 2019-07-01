@@ -262,3 +262,52 @@ ex-+*^-part1 m (suc n) (suc p)
   rewrite ex-+*^-part1 m n (suc p)
   | *-assoc m (m ^ n) (m * (m ^ p))
   = refl
+
+--
+-- Exercise Bin-laws (stretch)
+--
+-- Recall that Exercise Bin defines a datatype of bitstrings representing natural numbers
+--
+data Bin : Set where
+  nil : Bin
+  x0_ : Bin → Bin
+  x1_ : Bin → Bin
+--
+-- Consider the following laws, where n ranges over naturals and x over bitstrings:
+inc   : Bin → Bin
+inc nil = x1_ nil
+inc (x0 x) = x1_ x
+inc (x1 x) = x0 (inc x)
+
+inc_test₁ : inc (x1 x1 x0 x1 nil) ≡ x0 x0 x1 x1 nil
+inc_test₁ = refl
+
+to    : ℕ → Bin
+to zero = x0 nil
+to (suc n) = inc (to n)
+
+to_test₁ : to 11 ≡ x1 x1 x0 x1 nil
+to_test₁ = refl
+
+from  : Bin → ℕ
+from nil = 0
+from (x0 x) = 2 * from x
+from (x1 x) = 1 + 2 * from x
+
+from_test₁ : from (x1 x1 x0 x1 nil) ≡ 11
+from_test₁ = refl
+
+-- For each law: if it holds, prove; if not, give a counterexample.
+
+l₁ : ∀ (x : Bin) → from (inc x) ≡ suc (from x)
+l₁ nil = refl
+l₁ (x0 x) = refl
+l₁ (x1 x)
+  rewrite +-identityʳ (from (inc x))
+  | +-identityʳ (from x)
+  | l₁ x
+  | +-comm (from x) (suc (from x))
+  = refl
+
+l₂ : ∀ (x : Bin) → to (from x) ≡ x
+l₃ : ∀ (n : ℕ) → from (to n) ≡ n
