@@ -158,3 +158,36 @@ open import Data.Nat using (ℕ; zero; suc; _+_; _*_; _∸_)
 --
 +-swap : ∀ (m n p : ℕ) → m + (n + p) ≡ n + (m + p)
 +-swap m n p rewrite +-comm′ m (n + p) | +-comm′ m p | +-assoc′ n p m = refl
+
+--
+-- Exercise *-distrib-+ (recommended)
+--
+-- Show multiplication distributes over addition, that is,
+--
+-- (m + n) * p ≡ m * p + n * p
+--
+-- for all naturals m, n, and p.
+--
+-- p₁ : zero ≡ zero
+-- p₁ = refl
+
+*-distrib-+ : ∀ (m n p : ℕ) → (m + n) * p ≡ m * p + n * p
+*-distrib-+ zero n p = refl
+*-distrib-+ (suc m) zero p rewrite +-comm m 0 | +-comm (p + (m * p)) 0 = refl
+*-distrib-+ (suc m) (suc n) p
+  rewrite +-comm m (suc n)
+  | +-comm n m
+  | *-distrib-+ m n p
+  | +-swap p (m * p) (n * p)
+  | +-assoc p (m * p) (p + n * p)
+  = refl
+
+unsuc : ∀ (m n : ℕ) → suc m ≡ suc n → m ≡ n
+unsuc m n = λ x → {!!}
+
++-striphead : ∀ (p m n : ℕ) → (p + m ≡ p + n) → (m ≡ n)
++-striphead p m n = {!!}
+
+*-comm : ∀ (m n : ℕ) → m * n ≡ n * m
+*-comm zero n = {!!}
+*-comm (suc m) n = {!!}
