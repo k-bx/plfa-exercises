@@ -202,12 +202,15 @@ open ≲-Reasoning
 -- Exercise ≃-implies-≲
 -- Show that every isomorphism implies an embedding.
 
--- postulate
---   ≃-implies-≲ : ∀ {A B : Set}
---     → A ≃ B
---       -----
---     → A ≲ B
--- -- Your code goes here
+≃-implies-≲ : ∀ {A B : Set}
+  → A ≃ B
+    -----
+  → A ≲ B
+≃-implies-≲ A≃B =
+  record
+    { to = to A≃B
+    ; from = from A≃B
+    ; from∘to = from∘to A≃B }
 
 -- Exercise _⇔_
 -- Define equivalence of propositions (also known as “if and only if”) as follows:
