@@ -215,11 +215,40 @@ open ≲-Reasoning
 -- Exercise _⇔_
 -- Define equivalence of propositions (also known as “if and only if”) as follows:
 
--- record _⇔_ (A B : Set) : Set where
---   field
---     to   : A → B
---     from : B → A
+record _⇔_ (A B : Set) : Set where
+  field
+    to   : A → B
+    from : B → A
+
 -- Show that equivalence is reflexive, symmetric, and transitive.
+
+⇔-refl : ∀ {A : Set}
+    -----
+  → A ⇔ A
+⇔-refl =
+  record
+    { to = λ z → z
+    ; from = λ z → z }
+
+⇔-sym : ∀ {A B : Set}
+  → A ⇔ B
+    -----
+  → B ⇔ A
+⇔-sym A⇔B =
+  record
+    { to = _⇔_.from A⇔B
+    ; from = _⇔_.to A⇔B }
+
+⇔-trans : ∀ {A B C : Set}
+  → A ⇔ B
+  → B ⇔ C
+    -----
+  → A ⇔ C
+⇔-trans A⇔B B⇔C =
+  record
+    { to = λ z → _⇔_.to B⇔C (_⇔_.to A⇔B z)
+    ; from = λ z → _⇔_.from A⇔B (_⇔_.from B⇔C z)
+    }
 
 -- -- Your code goes here
 
