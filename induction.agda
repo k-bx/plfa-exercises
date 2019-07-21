@@ -309,5 +309,11 @@ l₁ (x1 x)
   | +-comm (from x) (suc (from x))
   = refl
 
-l₂ : ∀ (x : Bin) → to (from x) ≡ x
+-- l₂ : ∀ (x : Bin) → to (from x) ≡ x
+-- l₂ nil = {!!} -- Does not hold, because x0 nil ≠ nil
+-- l₂ (x0 x) = {!!}
+-- l₂ (x1 x) = {!!}
+
 l₃ : ∀ (n : ℕ) → from (to n) ≡ n
+l₃ zero = refl
+l₃ (suc n) rewrite l₁ (to n) | l₃ n = refl

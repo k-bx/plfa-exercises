@@ -255,14 +255,40 @@ record _⇔_ (A B : Set) : Set where
 -- Exercise Bin-embedding (stretch)
 -- Recall that Exercises Bin and Bin-laws define a datatype of bitstrings representing natural numbers:
 
--- data Bin : Set where
---   nil : Bin
---   x0_ : Bin → Bin
---   x1_ : Bin → Bin
+data Bin : Set where
+  nil : Bin
+  x0_ : Bin → Bin
+  x1_ : Bin → Bin
+
 -- And ask you to define the following functions
 
--- to : ℕ → Bin
--- from : Bin → ℕ
+open Data.Nat
+
+inc   : Bin → Bin
+inc nil = x1_ nil
+inc (x0 x) = x1_ x
+inc (x1 x) = x0 (inc x)
+
+toBin : ℕ → Bin
+toBin zero = x0 nil
+toBin (suc n) = inc (toBin n)
+
+fromBin : Bin → ℕ
+fromBin nil = 0
+fromBin (x0 x) = 2 * fromBin x
+fromBin (x1 x) = 1 + 2 * fromBin x
+
+postulate
+  l₃ : ∀ (n : ℕ) → fromBin (toBin n) ≡ n
+
+Bin-embedding : ℕ ≲ Bin
+Bin-embedding =
+  record
+    { to = toBin
+    ; from = fromBin
+    ; from∘to = l₃
+    }
+
 -- which satisfy the following property:
 
 -- from (to n) ≡ n
