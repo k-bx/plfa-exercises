@@ -276,7 +276,8 @@ currying =
 
 -- This is called a weak distributive law. Give the corresponding distributive law, and explain how it relates to the weak version.
 
--- -- Your code goes here
+⊎-× : ∀ {A B C : Set} → (A ⊎ B) × C → (A × C) ⊎ (B × C)
+⊎-× = λ{ ⟨ inj₁ x , x₁ ⟩ → inj₁ ⟨ x , x₁ ⟩ ; ⟨ inj₂ x , x₁ ⟩ → inj₂ ⟨ x , x₁ ⟩}
 
 -- Exercise ⊎×-implies-×⊎
 
