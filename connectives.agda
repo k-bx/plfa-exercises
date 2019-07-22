@@ -288,4 +288,9 @@ currying =
 
 -- Does the converse hold? If so, prove; if not, give a counterexample.
 
--- -- Your code goes here
+×⊎-implies-⊎× : ∀ {A B C D : Set} → (A ⊎ C) × (B ⊎ D) → (A × B) ⊎ (C × D)
+×⊎-implies-⊎× =
+  λ{ ⟨ inj₁ x , inj₁ x₁ ⟩ → inj₁ ⟨ x , x₁ ⟩
+   ; ⟨ inj₁ x , inj₂ x₁ ⟩ → {!!} -- this is impossible
+   ; ⟨ inj₂ x , inj₁ x₁ ⟩ → {!!} -- this is impossible
+   ; ⟨ inj₂ x , inj₂ x₁ ⟩ → inj₂ ⟨ x , x₁ ⟩}
