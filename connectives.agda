@@ -271,8 +271,8 @@ currying =
 
 -- Show that the following property holds:
 
--- postulate
---   ⊎-weak-× : ∀ {A B C : Set} → (A ⊎ B) × C → A ⊎ (B × C)
+⊎-weak-× : ∀ {A B C : Set} → (A ⊎ B) × C → A ⊎ (B × C)
+⊎-weak-× = λ{ ⟨ inj₁ x , x₁ ⟩ → inj₁ x ; ⟨ inj₂ x , x₁ ⟩ → inj₂ ⟨ x , x₁ ⟩}
 
 -- This is called a weak distributive law. Give the corresponding distributive law, and explain how it relates to the weak version.
 
