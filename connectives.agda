@@ -132,6 +132,17 @@ infix 1 _⊎_
 
 -- Exercise ⊎-comm (recommended)
 -- Show sum is commutative up to isomorphism.
+
+⊎-comm : ∀ {A B : Set}
+  → A ⊎ B ≃ B ⊎ A
+⊎-comm =
+  record
+    { to = λ{ (inj₁ x) → inj₂ x ; (inj₂ x) → inj₁ x}
+    ; from = λ{ (inj₁ x) → inj₂ x ; (inj₂ x) → inj₁ x}
+    ; from∘to = λ{ (inj₁ x) → refl ; (inj₂ x) → refl}
+    ; to∘from = λ{ (inj₁ x) → refl ; (inj₂ x) → refl}
+    }
+
 -- -- Your code goes here
 -- Exercise ⊎-assoc
 -- Show sum is associative up to isomorphism.
