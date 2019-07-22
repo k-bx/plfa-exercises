@@ -173,7 +173,17 @@ uniq-⊥ h ()
 
 -- Exercise ⊥-identityˡ (recommended)
 -- Show empty is the left identity of sums up to isomorphism.
--- -- Your code goes here
+
+⊥-identityˡ : ∀ { A : Set }
+  → ⊥ ⊎ A ≃ A
+⊥-identityˡ =
+  record
+    { to = λ{ (inj₂ x) → x}
+    ; from = λ{ x → inj₂ x}
+    ; from∘to = λ{ (inj₂ x) → refl}
+    ; to∘from = λ{y → refl}
+    }
+
 -- Exercise ⊥-identityʳ
 -- Show empty is the right identity of sums up to isomorphism.
 -- -- Your code goes here
