@@ -54,6 +54,18 @@ infixr 2 _×_
 -- Exercise ⇔≃× (recommended)
 -- Show that A ⇔ B as defined earlier is isomorphic to (A → B) × (B → A).
 
+open import isomorphisms
+
+⇔≃× : ∀ {A B : Set}
+  → A ⇔ B ≃ (A → B) × (B → A)
+⇔≃× =
+  record
+    { to = λ z → ⟨ _⇔_.to z , _⇔_.from z ⟩
+    ; from = λ {⟨ x , y ⟩ → record { to = x ; from = y }}
+    ; from∘to = λ x → refl
+    ; to∘from = λ {⟨ x , y ⟩ → refl}
+    }
+
 data ⊤ : Set where
 
   tt :

@@ -5,9 +5,10 @@ open Eq using (_≡_; refl; cong; cong-app)
 open Eq.≡-Reasoning
 open import Data.Nat using (ℕ; zero; suc; _+_)
 open import Data.Nat.Properties using (+-comm)
+open import Function using (_∘_)
 
-_∘_ : ∀ {A B C : Set} → (B → C) → (A → B) → (A → C)
-(g ∘ f) x  = g (f x)
+-- _∘_ : ∀ {A B C : Set} → (B → C) → (A → B) → (A → C)
+-- (g ∘ f) x  = g (f x)
 
 postulate
   extensionality : ∀ {A B : Set} {f g : A → B}
