@@ -282,8 +282,8 @@ currying =
 
 -- Show that a disjunct of conjuncts implies a conjunct of disjuncts:
 
--- postulate
---   ⊎×-implies-×⊎ : ∀ {A B C D : Set} → (A × B) ⊎ (C × D) → (A ⊎ C) × (B ⊎ D)
+⊎×-implies-×⊎ : ∀ {A B C D : Set} → (A × B) ⊎ (C × D) → (A ⊎ C) × (B ⊎ D)
+⊎×-implies-×⊎ = λ{ (inj₁ ⟨ x , x₁ ⟩) → ⟨ inj₁ x , inj₁ x₁ ⟩ ; (inj₂ ⟨ x , x₁ ⟩) → ⟨ inj₂ x , inj₂ x₁ ⟩}
 
 -- Does the converse hold? If so, prove; if not, give a counterexample.
 
