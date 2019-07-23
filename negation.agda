@@ -70,7 +70,27 @@ assimilation ¬x ¬x′ = extensionality (λ x → ⊥-elim (¬x x))
 
 -- Using negation, show that strict inequality is irreflexive, that is, n < n holds for no n.
 
--- -- Your code goes here
+infix 4 _<_
+
+data _<_ : ℕ → ℕ → Set where
+
+  z<s : ∀ {n : ℕ}
+      ------------
+    → zero < suc n
+
+  s<s : ∀ {m n : ℕ}
+    → m < n
+      -------------
+    → suc m < suc n
+
+-- <-cong : ∀ {n : ℕ}
+--   → (n < n)
+
+open import Function using (_∘_)
+
+<-irreflexive : ∀ {n : ℕ}
+  → ((n < n) → ⊥)
+<-irreflexive (s<s m<m) = <-irreflexive m<m
 
 -- Exercise trichotomy
 
