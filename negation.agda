@@ -1,7 +1,5 @@
 module negation where
 
-
-
 open import Relation.Binary.PropositionalEquality using (_≡_; refl)
 open import Data.Nat using (ℕ; zero; suc)
 open import Data.Empty using (⊥; ⊥-elim)
@@ -102,7 +100,20 @@ open import Function using (_∘_)
 
 -- Here “exactly one” means that not only one of the three must hold, but that when one holds the negation of the other two must also hold.
 
--- -- Your code goes here
+data _>_ (m n : ℕ) : Set where
+  mk-> : n < m → m > n
+
+open import Data.Product using (_,_; proj₁; proj₂)
+open import Relation.Binary.PropositionalEquality using (cong)
+
+>≡<-trechotomy₁ : ∀ {m n : ℕ}
+  → m < n
+  → (¬ m ≡ n × ¬ m > n)
+>≡<-trechotomy₁ z<s = (λ{ ()}) , λ{ (mk-> ())}
+>≡<-trechotomy₁ (s<s m<n) =
+  let e₁ = ( λ{ refl → proj₂ (>≡<-trechotomy₁ m<n) (mk-> m<n)})
+      e₂ = λ{ (mk-> (s<s x)) → proj₂ (>≡<-trechotomy₁ m<n) (mk-> x)}
+  in e₁ , e₂
 
 -- Exercise ⊎-dual-× (recommended)
 
