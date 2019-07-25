@@ -117,13 +117,51 @@ open import Relation.Binary.PropositionalEquality using (cong)
 
 -- Exercise ⊎-dual-× (recommended)
 
--- Show that conjunction, disjunction, and negation are related by a version of De Morgan’s Law.
-
--- ¬ (A ⊎ B) ≃ (¬ A) × (¬ B)
-
+-- Show that conjunction, disjunction, and negation are related by a
+-- version of De Morgan’s Law.
 -- This result is an easy consequence of something we’ve proved previously.
 
--- -- Your code goes here
+η-→ : ∀ {A B : Set} (f : A → B) → (λ (x : A) → f x) ≡ f
+η-→ f = refl
+
+case-⊎ : ∀ {A B C : Set}
+  → (A → C)
+  → (B → C)
+  → A ⊎ B
+    -----------
+  → C
+case-⊎ f g (inj₁ x) = f x
+case-⊎ f g (inj₂ y) = g y
+
+⊎-dual-×--from : ∀ {A B : Set}
+  → ¬ A × ¬ B → ¬ (A ⊎ B)
+⊎-dual-×--from (¬A , ¬B) =
+  case-⊎ ¬A ¬B
+
+⊎-dual-×--to : ∀ {A B : Set}
+  → ¬ (A ⊎ B) → ¬ A × ¬ B
+⊎-dual-×--to = λ{¬A⊎B → (¬A⊎B ∘ inj₁) , ¬A⊎B ∘ inj₂}
+
+uniq-⊎ : ∀ {A B C : Set} (h : A ⊎ B → C) (w : A ⊎ B) →
+  case-⊎ (h ∘ inj₁) (h ∘ inj₂) w ≡ h w
+uniq-⊎ h (inj₁ x) = refl
+uniq-⊎ h (inj₂ y) = refl
+
+⊎-dual-×--from∘to : ∀ {A B : Set}
+  → (x : ¬ (A ⊎ B)) → ⊎-dual-×--from (⊎-dual-×--to x) ≡ x
+⊎-dual-×--from∘to {A} {B} ¬A⊎B
+  rewrite η-→ (⊎-dual-×--to {A} {B})
+  = extensionality (λ (w : A ⊎ B) → uniq-⊎ ¬A⊎B w)
+
+⊎-dual-× : ∀ {A B : Set}
+  → ¬ (A ⊎ B) ≃ (¬ A) × (¬ B)
+⊎-dual-× {A} {B} =
+  record
+    { to = ⊎-dual-×--to
+    ; from = ⊎-dual-×--from
+    ; from∘to = ⊎-dual-×--from∘to
+    ; to∘from = λ{ (fst , snd) → refl}
+    }
 
 -- Do we also have the following?
 
