@@ -150,7 +150,7 @@ uniq-⊎ h (inj₂ y) = refl
 ⊎-dual-×--from∘to : ∀ {A B : Set}
   → (x : ¬ (A ⊎ B)) → ⊎-dual-×--from (⊎-dual-×--to x) ≡ x
 ⊎-dual-×--from∘to ¬A⊎B
-  = extensionality (λ w → uniq-⊎ ¬A⊎B w)
+  = extensionality (uniq-⊎ ¬A⊎B)
 
 ⊎-dual-× : ∀ {A B : Set}
   → ¬ (A ⊎ B) ≃ (¬ A) × (¬ B)
