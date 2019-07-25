@@ -152,6 +152,7 @@ uniq-⊎ h (inj₂ y) = refl
 ⊎-dual-×--from∘to ¬A⊎B
   = extensionality (uniq-⊎ ¬A⊎B)
 
+-- Alternative implementation via assimilation
 ⊎-dual-×--from∘to₂ : ∀ {A B : Set}
   → (x : ¬ (A ⊎ B)) → ⊎-dual-×--from (⊎-dual-×--to x) ≡ x
 ⊎-dual-×--from∘to₂ ¬A⊎B
