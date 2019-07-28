@@ -4,7 +4,7 @@ import Relation.Binary.PropositionalEquality as Eq
 open Eq using (_≡_; refl)
 open import Data.Nat using (ℕ; zero; suc; _+_; _*_)
 open import Relation.Nullary using (¬_)
-open import Data.Product using (_×_; proj₁) renaming (_,_ to ⟨_,_⟩)
+open import Data.Product using (_×_; proj₁; proj₂) renaming (_,_ to ⟨_,_⟩)
 open import Data.Sum using (_⊎_)
 open import isomorphisms using (_≃_; extensionality)
 
@@ -23,7 +23,7 @@ open import isomorphisms using (_≃_; extensionality)
   (∀ (x : A) → B x × C x) ≃ (∀ (x : A) → B x) × (∀ (x : A) → C x)
 ∀-distrib-× =
   record
-    { to = λ{x → ⟨ (λ x₁ → proj₁ (x x₁)) , (λ x₁ → Data.Product.proj₂ (x x₁)) ⟩}
+    { to = λ{x → ⟨ (λ x₁ → proj₁ (x x₁)) , (λ x₁ → proj₂ (x x₁)) ⟩}
     ; from = λ{ ⟨ fst , snd ⟩ x₁ → ⟨ fst x₁ , snd x₁ ⟩}
     ; from∘to = λ{x → refl}
     ; to∘from = λ{ ⟨ fst , snd ⟩ → refl}
@@ -41,16 +41,58 @@ open import isomorphisms using (_≃_; extensionality)
 ⊎∀-implies-∀⊎ (_⊎_.inj₂ xc) = λ x → _⊎_.inj₂ (xc x)
 
 -- Does the converse hold? If so, prove; if not, explain why.
+
+-- -- Not holds, don't know which branch before we split on x
+-- ∀⊎-implies-⊎∀ : ∀ {A : Set} {B C : A → Set} →
+--   (∀ (x : A) → B x ⊎ C x) → (∀ (x : A) → B x) ⊎ (∀ (x : A) → C x)
+-- ∀⊎-implies-⊎∀ f = proj₁ (λ x → f x)
+
 -- Exercise ∀-×
 
 -- Consider the following type.
 
--- data Tri : Set where
---   aa : Tri
---   bb : Tri
---   cc : Tri
+data Tri : Set where
+  aa : Tri
+  bb : Tri
+  cc : Tri
+
+elim-Tri : ∀ { B : Tri → Set }
+  → B aa → B bb → B cc → (t : Tri) → B t
+elim-Tri a b c aa = a
+elim-Tri a b c bb = b
+elim-Tri a b c cc = c
+
+η-Tri :
+  (y : Tri) → elim-Tri aa bb cc y ≡ y
+η-Tri =
+  λ{ aa → elim-Tri aa bb cc aa
+   ; bb → elim-Tri aa bb cc bb
+   ; cc → elim-Tri aa bb cc cc
+   }
+
+uniq-Tri₁ : ∀ { B : Tri → Set }
+  → (x : ∀ (z : Tri) → B z) → (y : Tri) → elim-Tri (x aa) (x bb) (x cc) y ≡ x y
+uniq-Tri₁ =
+  λ{ x aa → elim-Tri (x aa) (x bb) (x cc) aa
+   ; x bb → elim-Tri (x aa) (x bb) (x cc) bb
+   ; x cc → elim-Tri (x aa) (x bb) (x cc) cc
+   }
 
 -- Let B be a type indexed by Tri, that is B : Tri → Set. Show that ∀ (x : Tri) → B x is isomorphic to B aa × B bb × B cc.
+
+open import isomorphisms using (extensionality)
+
+ex₁ : ∀ {B : Tri → Set} → (∀ (x : Tri) → B x) ≃ B aa × B bb × B cc
+ex₁ =
+  record
+    { to = λ x → ⟨ x aa , ⟨ x bb , x cc ⟩ ⟩
+    ; from = λ x → elim-Tri (proj₁ x) (proj₁ (proj₂ x)) (proj₂ (proj₂ x))
+    ; from∘to =
+              λ x →
+                let v = λ y → uniq-Tri₁ x y
+                in {!extensionality v!}
+    ; to∘from = λ y → refl
+    }
 
 data Σ (A : Set) (B : A → Set) : Set where
   ⟨_,_⟩ : (x : A) → B x → Σ A B
@@ -86,15 +128,15 @@ syntax ∃-syntax (λ x → B) = ∃[ x ] B
 
 -- Show that existentials distribute over disjunction:
 
-∃-distrib-⊎ : ∀ {A : Set} {B C : A → Set} →
-  ∃[ x ] (B x ⊎ C x) ≃ (∃[ x ] B x) ⊎ (∃[ x ] C x)
-∃-distrib-⊎ =
-  record
-    { to = {!!}
-    ; from = {!!}
-    ; from∘to = {!!}
-    ; to∘from = {!!}
-    }
+-- ∃-distrib-⊎ : ∀ {A : Set} {B C : A → Set} →
+--   ∃[ x ] (B x ⊎ C x) ≃ (∃[ x ] B x) ⊎ (∃[ x ] C x)
+-- ∃-distrib-⊎ =
+--   record
+--     { to = {!!}
+--     ; from = {!!}
+--     ; from∘to = {!!}
+--     ; to∘from = {!!}
+--     }
 
 -- Exercise ∃×-implies-×∃
 
