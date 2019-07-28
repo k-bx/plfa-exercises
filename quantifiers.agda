@@ -62,37 +62,81 @@ elim-Tri a b c aa = a
 elim-Tri a b c bb = b
 elim-Tri a b c cc = c
 
-η-Tri :
-  (y : Tri) → elim-Tri aa bb cc y ≡ y
-η-Tri =
-  λ{ aa → elim-Tri aa bb cc aa
-   ; bb → elim-Tri aa bb cc bb
-   ; cc → elim-Tri aa bb cc cc
-   }
+-- η-Tri :
+--   (y : Tri) → elim-Tri aa bb cc y ≡ y
+-- η-Tri =
+--   λ{ aa → elim-Tri aa bb cc aa
+--    ; bb → elim-Tri aa bb cc bb
+--    ; cc → elim-Tri aa bb cc cc
+--    }
 
-uniq-Tri₁ : ∀ { B : Tri → Set }
-  → (x : ∀ (z : Tri) → B z) → (y : Tri) → elim-Tri (x aa) (x bb) (x cc) y ≡ x y
-uniq-Tri₁ =
-  λ{ x aa → elim-Tri (x aa) (x bb) (x cc) aa
-   ; x bb → elim-Tri (x aa) (x bb) (x cc) bb
-   ; x cc → elim-Tri (x aa) (x bb) (x cc) cc
-   }
+-- uniq-Tri₁ : ∀ { B : Tri → Set }
+--   → (x : ∀ (z : Tri) → B z) → (y : Tri) → elim-Tri (x aa) (x bb) (x cc) y ≡ x y
+-- uniq-Tri₁ =
+--   λ{ x aa → elim-Tri (x aa) (x bb) (x cc) aa
+--    ; x bb → elim-Tri (x aa) (x bb) (x cc) bb
+--    ; x cc → elim-Tri (x aa) (x bb) (x cc) cc
+--    }
 
 -- Let B be a type indexed by Tri, that is B : Tri → Set. Show that ∀ (x : Tri) → B x is isomorphic to B aa × B bb × B cc.
 
 open import isomorphisms using (extensionality)
 
-ex₁ : ∀ {B : Tri → Set} → (∀ (x : Tri) → B x) ≃ B aa × B bb × B cc
-ex₁ =
+postulate
+  ∀-extensionality :
+    ∀ {A : Set} {B : A → Set} (f g : ∀ (x : A) → B x)
+    → (∀ (x : A) → (f x ≡ g x))
+    → f ≡ g
+
+-- from https://github.com/chirsz-ever/plfa-code/blob/ee7fe50737d7129ee4ac3cdf98f964ce77ece8ed/src/plfa-code/Quantifiers.agda#L49
+∀-×₂ : {B : Tri → Set} → (∀ (x : Tri) → B x) ≃ (B aa × B bb × B cc)
+∀-×₂ {B} =
   record
-    { to = λ x → ⟨ x aa , ⟨ x bb , x cc ⟩ ⟩
-    ; from = λ x → elim-Tri (proj₁ x) (proj₁ (proj₂ x)) (proj₂ (proj₂ x))
-    ; from∘to =
-              λ x →
-                let v = λ y → uniq-Tri₁ x y
-                in {!extensionality v!}
-    ; to∘from = λ y → refl
+  { to      = to′
+  ; from    = from′
+  ; from∘to = λ f → ∀-extensionality (from′ ⟨ f aa , ⟨ f bb , f cc ⟩ ⟩) f
+                                     λ{aa → refl; bb → refl; cc → refl}
+  ; to∘from = λ xx → refl
+  }
+  where
+  to′ : (∀ (x : Tri) → B x) → (B aa × B bb × B cc)
+  to′ f = ⟨ f aa , ⟨ f bb , f cc ⟩ ⟩
+  from′ : (B aa × B bb × B cc) → (∀ (x : Tri) → B x)
+  from′ xx aa = proj₁ xx
+  from′ xx bb = proj₁ (proj₂ xx)
+  from′ xx cc = proj₂ (proj₂ xx)
+
+∀-× : {B : Tri → Set} → (∀ (x : Tri) → B x) ≃ (B aa × B bb × B cc)
+∀-× {B} =
+  record
+    { to = to′
+    ; from = from′
+    ; from∘to = from∘to′
+    ; to∘from = λ{y → refl}
     }
+  where
+    to′ : ((x : Tri) → B x) → B aa × B bb × B cc
+    to′ = λ x → ⟨ x aa , ⟨ x bb , x cc ⟩ ⟩
+    from′ : B aa × B bb × B cc → (x : Tri) → B x
+    from′ = λ{ x aa → proj₁ x ; x bb → proj₁ (proj₂ x) ; x cc → proj₂ (proj₂ x)}
+    from∘to′ : (x : (x₁ : Tri) → B x₁) → from′ ⟨ x aa , ⟨ x bb , x cc ⟩ ⟩ ≡ x
+    from∘to′ =
+      λ f →
+      let v = from′ ⟨ f aa , ⟨ f bb , f cc ⟩ ⟩
+      in ∀-extensionality v f λ{ aa → refl ; bb → refl ; cc → refl}
+
+-- failed attempt
+-- ex₁ : ∀ {B : Tri → Set} → (∀ (x : Tri) → B x) ≃ B aa × B bb × B cc
+-- ex₁ =
+--   record
+--     { to = λ x → ⟨ x aa , ⟨ x bb , x cc ⟩ ⟩
+--     ; from = λ x → elim-Tri (proj₁ x) (proj₁ (proj₂ x)) (proj₂ (proj₂ x))
+--     ; from∘to =
+--               λ x →
+--                 let v = λ y → uniq-Tri₁ x y
+--                 in {!extensionality v!}
+--     ; to∘from = λ y → refl
+--     }
 
 data Σ (A : Set) (B : A → Set) : Set where
   ⟨_,_⟩ : (x : A) → B x → Σ A B
