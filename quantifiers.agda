@@ -19,11 +19,18 @@ open import isomorphisms using (_≃_; extensionality)
 
 -- Show that universals distribute over conjunction:
 
--- postulate
---   ∀-distrib-× : ∀ {A : Set} {B C : A → Set} →
---     (∀ (x : A) → B x × C x) ≃ (∀ (x : A) → B x) × (∀ (x : A) → C x)
+∀-distrib-× : ∀ {A : Set} {B C : A → Set} →
+  (∀ (x : A) → B x × C x) ≃ (∀ (x : A) → B x) × (∀ (x : A) → C x)
+∀-distrib-× =
+  record
+    { to = λ{x → ⟨ (λ x₁ → proj₁ (x x₁)) , (λ x₁ → Data.Product.proj₂ (x x₁)) ⟩}
+    ; from = λ{ ⟨ fst , snd ⟩ x₁ → ⟨ fst x₁ , snd x₁ ⟩}
+    ; from∘to = λ{x → refl}
+    ; to∘from = λ{ ⟨ fst , snd ⟩ → refl}
+    }
 
 -- Compare this with the result (→-distrib-×) in Chapter Connectives.
+
 -- Exercise ⊎∀-implies-∀⊎
 
 -- Show that a disjunction of universals implies a universal of disjunctions:
@@ -78,9 +85,15 @@ syntax ∃-syntax (λ x → B) = ∃[ x ] B
 
 -- Show that existentials distribute over disjunction:
 
--- postulate
---   ∃-distrib-⊎ : ∀ {A : Set} {B C : A → Set} →
---     ∃[ x ] (B x ⊎ C x) ≃ (∃[ x ] B x) ⊎ (∃[ x ] C x)
+∃-distrib-⊎ : ∀ {A : Set} {B C : A → Set} →
+  ∃[ x ] (B x ⊎ C x) ≃ (∃[ x ] B x) ⊎ (∃[ x ] C x)
+∃-distrib-⊎ =
+  record
+    { to = {!!}
+    ; from = {!!}
+    ; from∘to = {!!}
+    ; to∘from = {!!}
+    }
 
 -- Exercise ∃×-implies-×∃
 
