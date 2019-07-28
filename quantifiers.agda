@@ -35,9 +35,10 @@ open import isomorphisms using (_≃_; extensionality)
 
 -- Show that a disjunction of universals implies a universal of disjunctions:
 
--- postulate
---   ⊎∀-implies-∀⊎ : ∀ {A : Set} {B C : A → Set} →
---     (∀ (x : A) → B x) ⊎ (∀ (x : A) → C x)  →  ∀ (x : A) → B x ⊎ C x
+⊎∀-implies-∀⊎ : ∀ {A : Set} {B C : A → Set} →
+  (∀ (x : A) → B x) ⊎ (∀ (x : A) → C x)  →  ∀ (x : A) → B x ⊎ C x
+⊎∀-implies-∀⊎ (_⊎_.inj₁ xb) = λ x → _⊎_.inj₁ (xb x)
+⊎∀-implies-∀⊎ (_⊎_.inj₂ xc) = λ x → _⊎_.inj₂ (xc x)
 
 -- Does the converse hold? If so, prove; if not, explain why.
 -- Exercise ∀-×
