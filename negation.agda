@@ -171,6 +171,19 @@ uniq-⊎ h (inj₂ y) = refl
 
 -- ¬ (A × B) ≃ (¬ A) ⊎ (¬ B)
 
+¬×-dual-¬⊎ : ∀ {A B : Set}
+  → ¬ (A × B) ≃ (¬ A) ⊎ (¬ B)
+¬×-dual-¬⊎ =
+  record
+    { to = λ{¬A×B →
+           let v₁ = ¬¬-intro ¬A×B
+             in inj₁ λ x → {!!} -- looks impossible
+           }
+    ; from = λ{ (inj₁ x) (a , b) → x a ; (inj₂ y) (a , b) → y b}
+    ; from∘to = {!!}
+    ; to∘from = {!!}
+    }
+
 -- If so, prove; if not, can you give a relation weaker than isomorphism that relates the two sides?
 
 postulate
