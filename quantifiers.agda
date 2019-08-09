@@ -62,21 +62,23 @@ elim-Tri a b c aa = a
 elim-Tri a b c bb = b
 elim-Tri a b c cc = c
 
--- η-Tri :
---   (y : Tri) → elim-Tri aa bb cc y ≡ y
--- η-Tri =
---   λ{ aa → elim-Tri aa bb cc aa
---    ; bb → elim-Tri aa bb cc bb
---    ; cc → elim-Tri aa bb cc cc
---    }
+η-Tri :
+  (y : Tri) → elim-Tri aa bb cc y ≡ y
+η-Tri =
+  λ{ aa → refl -- elim-Tri aa bb cc aa
+   ; bb → refl -- elim-Tri aa bb cc bb
+   ; cc → refl -- elim-Tri aa bb cc cc
+   }
 
--- uniq-Tri₁ : ∀ { B : Tri → Set }
---   → (x : ∀ (z : Tri) → B z) → (y : Tri) → elim-Tri (x aa) (x bb) (x cc) y ≡ x y
--- uniq-Tri₁ =
---   λ{ x aa → elim-Tri (x aa) (x bb) (x cc) aa
---    ; x bb → elim-Tri (x aa) (x bb) (x cc) bb
---    ; x cc → elim-Tri (x aa) (x bb) (x cc) cc
---    }
+uniq-Tri₁ : ∀ { B : Tri → Set }
+  → (x : ∀ (z : Tri) → B z)
+  → (y : Tri)
+  → elim-Tri {B} (x aa) (x bb) (x cc) y ≡ x y
+uniq-Tri₁ =
+  λ{ x aa → refl -- elim-Tri (x aa) (x bb) (x cc) aa
+   ; x bb → refl -- elim-Tri (x aa) (x bb) (x cc) bb
+   ; x cc → refl -- elim-Tri (x aa) (x bb) (x cc) cc
+   }
 
 -- Let B be a type indexed by Tri, that is B : Tri → Set. Show that ∀ (x : Tri) → B x is isomorphic to B aa × B bb × B cc.
 
@@ -126,17 +128,17 @@ postulate
       in ∀-extensionality v f λ{ aa → refl ; bb → refl ; cc → refl}
 
 -- failed attempt
--- ex₁ : ∀ {B : Tri → Set} → (∀ (x : Tri) → B x) ≃ B aa × B bb × B cc
--- ex₁ =
---   record
---     { to = λ x → ⟨ x aa , ⟨ x bb , x cc ⟩ ⟩
---     ; from = λ x → elim-Tri (proj₁ x) (proj₁ (proj₂ x)) (proj₂ (proj₂ x))
---     ; from∘to =
---               λ x →
---                 let v = λ y → uniq-Tri₁ x y
---                 in {!extensionality v!}
---     ; to∘from = λ y → refl
---     }
+ex₁ : ∀ {B : Tri → Set} → (∀ (x : Tri) → B x) ≃ B aa × B bb × B cc
+ex₁ =
+  record
+    { to = λ x → ⟨ x aa , ⟨ x bb , x cc ⟩ ⟩
+    ; from = λ x → elim-Tri (proj₁ x) (proj₁ (proj₂ x)) (proj₂ (proj₂ x))
+    ; from∘to = λ x → let v = λ y → uniq-Tri₁ x y in {!∀-extensionality !}
+         -- let v = λ y → uniq-Tri₁ x y ? -- extensionality v
+                -- let v = λ y → uniq-Tri₁ x y
+                -- in ? -- {!extensionality v!}
+    ; to∘from = λ y → refl
+    }
 
 data Σ (A : Set) (B : A → Set) : Set where
   ⟨_,_⟩ : (x : A) → B x → Σ A B
