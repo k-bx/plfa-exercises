@@ -44,6 +44,29 @@ plusᶜ =  ƛ "m" ⇒ ƛ "n" ⇒ ƛ "s" ⇒ ƛ "z" ⇒
 sucᶜ : Term
 sucᶜ = ƛ "n" ⇒ `suc (` "n")
 
+-- #### Exercise `mul` (recommended)
+
+-- Write out the definition of a lambda term that multiplies
+-- two natural numbers.  Your definition may use `plus` as
+-- defined earlier.
+
+-- -- Your code goes here
+
+-- #### Exercise `mulᶜ`
+
+-- Write out the definition of a lambda term that multiplies
+-- two natural numbers represented as Church numerals. Your
+-- definition may use `plusᶜ` as defined earlier (or may not
+-- — there are nice definitions both ways).
+
+-- -- Your code goes here
+
+-- #### Exercise `primed` (stretch)
+
+-- Some people find it annoying to write `` ` "x" `` instead of `x`.
+-- We can make examples with lambda terms slightly easier to write
+-- by adding the following definitions:
+
 ƛ′_⇒_ : Term → Term → Term
 ƛ′ (` x) ⇒ N  =  ƛ x ⇒ N
 ƛ′ _ ⇒ _      =  ⊥-elim impossible
@@ -59,6 +82,8 @@ case′ _ [zero⇒ _ |suc _ ⇒ _ ]      =  ⊥-elim impossible
 μ′ _ ⇒ _      =  ⊥-elim impossible
   where postulate impossible : ⊥
 
+-- The definition of `plus` can now be written as follows:
+
 plus′ : Term
 plus′ = μ′ + ⇒ ƛ′ m ⇒ ƛ′ n ⇒
           case′ m
@@ -68,6 +93,8 @@ plus′ = μ′ + ⇒ ƛ′ m ⇒ ƛ′ n ⇒
   +  =  ` "+"
   m  =  ` "m"
   n  =  ` "n"
+
+-- Write out the definition of multiplication in the same style.
 
 data Value : Term → Set where
 
