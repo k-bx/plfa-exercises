@@ -128,17 +128,18 @@ postulate
       in ∀-extensionality v f λ{ aa → refl ; bb → refl ; cc → refl}
 
 -- failed attempt
-ex₁ : ∀ {B : Tri → Set} → (∀ (x : Tri) → B x) ≃ B aa × B bb × B cc
-ex₁ =
-  record
-    { to = λ x → ⟨ x aa , ⟨ x bb , x cc ⟩ ⟩
-    ; from = λ x → elim-Tri (proj₁ x) (proj₁ (proj₂ x)) (proj₂ (proj₂ x))
-    ; from∘to = λ x → let v = λ y → uniq-Tri₁ x y in {!∀-extensionality !}
-         -- let v = λ y → uniq-Tri₁ x y ? -- extensionality v
-                -- let v = λ y → uniq-Tri₁ x y
-                -- in ? -- {!extensionality v!}
-    ; to∘from = λ y → refl
-    }
+-- ex₁ : ∀ {B : Tri → Set} → (∀ (x : Tri) → B x) ≃ B aa × B bb × B cc
+-- ex₁ =
+--   record
+--     { to = λ x → ⟨ x aa , ⟨ x bb , x cc ⟩ ⟩
+--     ; from = λ x → elim-Tri (proj₁ x) (proj₁ (proj₂ x)) (proj₂ (proj₂ x))
+--     ; from∘to = from∘to′
+--          -- λ x → let v = λ y → uniq-Tri₁ x y in {!∀-extensionality {Tri} {B} v!}
+--     ; to∘from = λ y → refl
+--     }
+--   where
+--     from∘to′ : (x : (x₁ : Tri) → B x₁) → from′ ⟨ x aa , ⟨ x bb , x cc ⟩ ⟩ ≡ x
+--     from∘to′ x = ?
 
 data Σ (A : Set) (B : A → Set) : Set where
   ⟨_,_⟩ : (x : A) → B x → Σ A B
