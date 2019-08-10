@@ -187,7 +187,21 @@ postulate
 -- Chapter [Isomorphism]({{ site.baseurl }}/Isomorphism/#iff),
 -- operation on booleans and decidables, and also show the corresponding erasure:
 
-postulate
-  _iff_ : Bool → Bool → Bool
-  _⇔-dec_ : ∀ {A B : Set} → Dec A → Dec B → Dec (A ⇔ B)
-  iff-⇔ : ∀ {A B : Set} (x : Dec A) (y : Dec B) → ⌊ x ⌋ iff ⌊ y ⌋ ≡ ⌊ x ⇔-dec y ⌋
+_iff_ : Bool → Bool → Bool
+true iff true = true
+true iff false = false
+false iff true = false
+false iff false = false
+
+_⇔-dec_ : ∀ {A B : Set} → Dec A → Dec B → Dec (A ⇔ B)
+yes x ⇔-dec yes x₁ = yes (record { to = λ _ → x₁ ; from = λ _ → x })
+yes x ⇔-dec no x₁ = no (λ z → x₁ (_⇔_.to z x))
+no x ⇔-dec yes x₁ = no (λ z → x (_⇔_.from z x₁))
+no ¬a ⇔-dec no ¬b = yes (no-no-yes ¬a ¬b)
+  where
+  no-no-yes : ∀ { A B : Set} → ¬ A → ¬ B → A ⇔ B
+  _⇔_.to (no-no-yes ¬A ¬B) = λ a → ⊥-elim (¬A a)
+  _⇔_.from (no-no-yes ¬A ¬B) = λ b → ⊥-elim (¬B b)
+
+-- postulate
+--   iff-⇔ : ∀ {A B : Set} (x : Dec A) (y : Dec B) → ⌊ x ⌋ iff ⌊ y ⌋ ≡ ⌊ x ⇔-dec y ⌋
