@@ -129,9 +129,14 @@ reverse-++-commute {A} {(x ∷ xs)} {ys} rewrite
 -- A function is an _involution_ if when applied twice it acts
 -- as the identity function.  Show that reverse is an involution:
 
-postulate
-  reverse-involutive : ∀ {A : Set} {xs : List A}
-    → reverse (reverse xs) ≡ xs
+reverse-involutive : ∀ {A : Set} {xs : List A}
+  → reverse (reverse xs) ≡ xs
+reverse-involutive {A} {[]} = refl
+reverse-involutive {A} {x ∷ xs} rewrite
+    reverse-involutive {A} {xs}
+  | reverse-++-commute {A} {reverse xs} {[ x ]}
+  | cong (x ∷_) (reverse-involutive {A} {xs})
+  = refl
 
 shunt : ∀ {A : Set} → List A → List A → List A
 shunt []       ys  =  ys
