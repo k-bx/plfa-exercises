@@ -79,8 +79,19 @@ suc m ≤? suc n with m ≤? n
 
 -- Analogous to the function above, define a function to decide strict inequality:
 
-postulate
-  _<?_ : ∀ (m n : ℕ) → Dec (m < n)
+¬s<z : ∀ {m : ℕ} → ¬ (suc m < zero)
+¬s<z ()
+
+¬s<s : ∀ {m n : ℕ} → ¬ (m < n) → ¬ (suc m < suc n)
+¬s<s ¬m<n (s<s m<n) = ¬m<n m<n
+
+_<?_ : ∀ (m n : ℕ) → Dec (m < n)
+zero <? zero = no (λ ())
+zero <? suc n = yes z<s
+suc m <? zero = no (λ ())
+suc m <? suc n with (m <? n)
+(suc m <? suc n) | yes x = yes (s<s x)
+(suc m <? suc n) | no ¬m<n = no (¬s<s ¬m<n)
 
 -- #### Exercise `_≡ℕ?_`
 
