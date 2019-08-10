@@ -261,11 +261,11 @@ odd-∃  (odd-suc e)  with even-∃ e
 
 -- Show that existential of a negation implies negation of a universal:
 
--- postulate
---   ∃¬-implies-¬∀ : ∀ {A : Set} {B : A → Set}
---     → ∃[ x ] (¬ B x)
---       --------------
---     → ¬ (∀ x → B x)
+∃¬-implies-¬∀ : ∀ {A : Set} {B : A → Set}
+  → ∃[ x ] (¬ B x)
+    --------------
+  → ¬ (∀ x → B x)
+∃¬-implies-¬∀ ⟨ x , x₂ ⟩ x₁ = x₂ (x₁ x)
 
 -- Does the converse hold? If so, prove; if not, explain why.
 -- Exercise Bin-isomorphism (stretch)
