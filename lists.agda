@@ -124,14 +124,6 @@ reverse-++-commute {A} {(x ∷ xs)} {ys} rewrite
   | ++-assoc (reverse ys) (reverse xs) [ x ]
   = refl
 
--- reverse-++-commute {A} {[]} {ys}  = sym (++-identityʳ (reverse ys))
--- reverse-++-commute {A} {x ∷ xs} {ys} = {!reverse-++ xs ys!}
-  -- begin
-  --   reverse (xs ++ ys)
-  -- ≡⟨⟩
-  --   reverse ys ++ reverse xs
-  -- ∎
-
 -- #### Exercise `reverse-involutive` (recommended)
 
 -- A function is an _involution_ if when applied twice it acts
