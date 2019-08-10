@@ -115,9 +115,22 @@ reverse (x ∷ xs)  =  reverse xs ++ [ x ]
 -- Show that the reverse of one list appended to another is the
 -- reverse of the second appended to the reverse of the first:
 
-postulate
-  reverse-++-commute : ∀ {A : Set} {xs ys : List A}
-    → reverse (xs ++ ys) ≡ reverse ys ++ reverse xs
+reverse-++-commute : ∀ {A : Set} {xs ys : List A}
+  → reverse (xs ++ ys) ≡ reverse ys ++ reverse xs
+reverse-++-commute {A} {[]} {[]} = refl
+reverse-++-commute {A} {[]} {(x ∷ ys)} = sym (++-identityʳ ((reverse ys) ++ [ x ]))
+reverse-++-commute {A} {(x ∷ xs)} {ys} rewrite
+    cong (_++ [ x ]) (reverse-++-commute {A} {xs} {ys})
+  | ++-assoc (reverse ys) (reverse xs) [ x ]
+  = refl
+
+-- reverse-++-commute {A} {[]} {ys}  = sym (++-identityʳ (reverse ys))
+-- reverse-++-commute {A} {x ∷ xs} {ys} = {!reverse-++ xs ys!}
+  -- begin
+  --   reverse (xs ++ ys)
+  -- ≡⟨⟩
+  --   reverse ys ++ reverse xs
+  -- ∎
 
 -- #### Exercise `reverse-involutive` (recommended)
 
