@@ -402,11 +402,24 @@ All-++-⇔ xs ys =
 
 -- #### Exercise `Any-++-⇔` (recommended)
 
--- Prove a result similar to `All-++-⇔`, but with `Any` in place of `All`, and a suitable
--- replacement for `_×_`.  As a consequence, demonstrate an equivalence relating
--- `_∈_` and `_++_`.
+-- Prove a result similar to `All-++-⇔`, but with `Any` in place of
+-- `All`, and a suitable replacement for `_×_`.  As a consequence,
+-- demonstrate an equivalence relating `_∈_` and `_++_`.
 
--- -- Your code goes here
+open import Data.Sum using (_⊎_; inj₁; inj₂; map₁)
+
+Any-++-⇔ : ∀ {A : Set} {P : A → Set} (xs ys : List A) →
+  Any P (xs ++ ys) ⇔ (Any P xs ⊎ Any P ys)
+_⇔_.to (Any-++-⇔ [] ys) xs++ys = inj₂ xs++ys
+_⇔_.to (Any-++-⇔ {A} {P} (x ∷ xs) ys) (here Px) = inj₁ (here {A} {P} {x} {xs} Px)
+_⇔_.to (Any-++-⇔ {A} {P} (x ∷ xs) ys) (there xs++ys)
+  = map₁ there (_⇔_.to (Any-++-⇔ {A} {P} xs ys) xs++ys)
+_⇔_.from (Any-++-⇔ [] ys) = λ{ (inj₂ y) → y}
+_⇔_.from (Any-++-⇔ {A} {P} (x ∷ xs) ys)
+  = λ{ (inj₁ (here x)) → here x
+     ; (inj₁ (there x)) → there ((_⇔_.from (Any-++-⇔ {A} {P} xs ys) (inj₁ x)))
+  ; (inj₂ y) → there {A} {P} {x} (_⇔_.from (Any-++-⇔ {A} {P} xs ys) (inj₂ y))
+  }
 
 -- #### Exercise `All-++-≃` (stretch)
 
