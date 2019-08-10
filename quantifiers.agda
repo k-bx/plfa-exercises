@@ -175,15 +175,16 @@ syntax ∃-syntax (λ x → B) = ∃[ x ] B
 
 -- Show that existentials distribute over disjunction:
 
--- ∃-distrib-⊎ : ∀ {A : Set} {B C : A → Set} →
---   ∃[ x ] (B x ⊎ C x) ≃ (∃[ x ] B x) ⊎ (∃[ x ] C x)
--- ∃-distrib-⊎ =
---   record
---     { to = {!!}
---     ; from = {!!}
---     ; from∘to = {!!}
---     ; to∘from = {!!}
---     }
+∃-distrib-⊎ : ∀ {A : Set} {B C : A → Set} →
+  ∃[ x ] (B x ⊎ C x) ≃ (∃[ x ] B x) ⊎ (∃[ x ] C x)
+∃-distrib-⊎ =
+  record
+    { to = λ{ ⟨ x , _⊎_.inj₁ x₁ ⟩ → _⊎_.inj₁ ⟨ x , x₁ ⟩ ; ⟨ x , _⊎_.inj₂ y ⟩ → _⊎_.inj₂ ⟨ x , y ⟩}
+    ; from = λ{ (_⊎_.inj₁ ⟨ x , x₁ ⟩) → ⟨ x , _⊎_.inj₁ x₁ ⟩
+              ; (_⊎_.inj₂ ⟨ x , x₁ ⟩) → ⟨ x , _⊎_.inj₂ x₁ ⟩ }
+    ; from∘to = λ{ ⟨ x , _⊎_.inj₁ x₁ ⟩ → refl ; ⟨ x , _⊎_.inj₂ y ⟩ → refl}
+    ; to∘from = λ{ (_⊎_.inj₁ ⟨ x , x₁ ⟩) → refl ; (_⊎_.inj₂ ⟨ x , x₁ ⟩) → refl}
+    }
 
 -- Exercise ∃×-implies-×∃
 
