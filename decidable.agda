@@ -191,7 +191,7 @@ _iff_ : Bool → Bool → Bool
 true iff true = true
 true iff false = false
 false iff true = false
-false iff false = false
+false iff false = true
 
 _⇔-dec_ : ∀ {A B : Set} → Dec A → Dec B → Dec (A ⇔ B)
 yes x ⇔-dec yes x₁ = yes (record { to = λ _ → x₁ ; from = λ _ → x })
@@ -203,5 +203,8 @@ no ¬a ⇔-dec no ¬b = yes (no-no-yes ¬a ¬b)
   _⇔_.to (no-no-yes ¬A ¬B) = λ a → ⊥-elim (¬A a)
   _⇔_.from (no-no-yes ¬A ¬B) = λ b → ⊥-elim (¬B b)
 
--- postulate
---   iff-⇔ : ∀ {A B : Set} (x : Dec A) (y : Dec B) → ⌊ x ⌋ iff ⌊ y ⌋ ≡ ⌊ x ⇔-dec y ⌋
+iff-⇔ : ∀ {A B : Set} (x : Dec A) (y : Dec B) → ⌊ x ⌋ iff ⌊ y ⌋ ≡ ⌊ x ⇔-dec y ⌋
+iff-⇔ (yes x) (yes x₁) = refl
+iff-⇔ (yes x) (no x₁) = refl
+iff-⇔ (no x) (yes x₁) = refl
+iff-⇔ (no x) (no x₁) = refl
