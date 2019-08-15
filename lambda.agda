@@ -379,7 +379,18 @@ nope₂ (⊢ƛ (⊢` ∋x · ⊢` ∋x′))  =  contradiction (∋-injective ∋
 -- Using the term `mul` you defined earlier, write out the derivation
 -- showing that it is well typed.
 
--- -- Your code goes here
+-- see ⊢plus
+⊢mul : ∀ {Γ} → Γ ⊢ mul ⦂ `ℕ ⇒ `ℕ ⇒ `ℕ
+⊢mul =
+  ⊢μ (⊢ƛ (⊢ƛ (⊢case (⊢` ∋m)
+                ⊢zero
+                (⊢plus · ⊢` ∋n′ · (⊢` ∋* · (⊢` ∋m′) · ⊢` ∋n′))
+                )))
+  where
+  ∋m  = (S ("m" ≠ "n") Z)
+  ∋n′ = S ("n" ≠ "m") Z
+  ∋m′ = Z
+  ∋*  = S ("*" ≠ "m") (S ("*" ≠ "n") (S ("*" ≠ "m") Z))
 
 -- #### Exercise `mulᶜ-type`
 
