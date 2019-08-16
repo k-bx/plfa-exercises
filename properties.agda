@@ -72,3 +72,38 @@ typed : ∀ {M A}
 typed (C-ƛ ⊢N)    =  ⊢ƛ ⊢N
 typed C-zero      =  ⊢zero
 typed (C-suc CM)  =  ⊢suc (typed CM)
+
+data Progress (M : Term) : Set where
+
+  step : ∀ {N}
+    → M —→ N
+      ----------
+    → Progress M
+
+  done :
+      Value M
+      ----------
+    → Progress M
+
+progress : ∀ {M A}
+  → ∅ ⊢ M ⦂ A
+    ----------
+  → Progress M
+progress (⊢` ())
+progress (⊢ƛ ⊢N)                            =  done V-ƛ
+progress (⊢L · ⊢M) with progress ⊢L
+... | step L—→L′                            =  step (ξ-·₁ L—→L′)
+... | done VL with progress ⊢M
+...   | step M—→M′                          =  step (ξ-·₂ VL M—→M′)
+...   | done VM with canonical ⊢L VL
+...     | C-ƛ _                             =  step (β-ƛ VM)
+progress ⊢zero                              =  done V-zero
+progress (⊢suc ⊢M) with progress ⊢M
+...  | step M—→M′                           =  step (ξ-suc M—→M′)
+...  | done VM                              =  done (V-suc VM)
+progress (⊢case ⊢L ⊢M ⊢N) with progress ⊢L
+... | step L—→L′                            =  step (ξ-case L—→L′)
+... | done VL with canonical ⊢L VL
+...   | C-zero                              =  step β-zero
+...   | C-suc CL                            =  step (β-suc (value CL))
+progress (⊢μ ⊢M)                            =  step β-μ
