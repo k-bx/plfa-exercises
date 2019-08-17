@@ -347,12 +347,12 @@ preserves : ∀ {M N A}
 preserves ∅⊢M⦂A (M ∎) = ∅⊢M⦂A
 preserves ∅⊢L⦂A (L —→⟨ L—→M ⟩ M—↠N) = preserves (preserve ∅⊢L⦂A L—→M) M—↠N
 
-postulate
-  wttdgs : ∀ {M N A}
-    → ∅ ⊢ M ⦂ A
-    → M —↠ N
-      -----------
-    → ¬ (Stuck N)
+wttdgs : ∀ {M N A}
+  → ∅ ⊢ M ⦂ A
+  → M —↠ N
+    -----------
+  → ¬ (Stuck N)
+wttdgs ∅⊢M⦂A M—↠N = unstuck (preserves ∅⊢M⦂A M—↠N)
 
 cong₄ : ∀ {A B C D E : Set} (f : A → B → C → D → E)
   {s w : A} {t x : B} {u y : C} {v z : D}
