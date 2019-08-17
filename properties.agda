@@ -335,16 +335,17 @@ unstuck : ∀ {M A}
   → ∅ ⊢ M ⦂ A
     -----------
   → ¬ (Stuck M)
-unstuck {M} {A} v ⟨ NormalLM , ¬ValueLM ⟩ with progress v
+unstuck v ⟨ NormalLM , ¬ValueLM ⟩ with progress v
 ... | step M—→N = NormalLM M—→N
 ... | done ValueM = ¬ValueLM ValueM
 
-postulate
-  preserves : ∀ {M N A}
-    → ∅ ⊢ M ⦂ A
-    → M —↠ N
-      ---------
-    → ∅ ⊢ N ⦂ A
+preserves : ∀ {M N A}
+  → ∅ ⊢ M ⦂ A
+  → M —↠ N
+    ---------
+  → ∅ ⊢ N ⦂ A
+preserves ∅⊢M⦂A (M ∎) = ∅⊢M⦂A
+preserves ∅⊢L⦂A (L —→⟨ L—→M ⟩ M—↠N) = preserves (preserve ∅⊢L⦂A L—→M) M—↠N
 
 postulate
   wttdgs : ∀ {M N A}
