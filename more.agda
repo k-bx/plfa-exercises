@@ -551,3 +551,14 @@ _ =
 --     an alternative formulation of unit type
 --     empty type (recommended)
 --     lists
+
+-- Exercise double-subst (stretch)
+
+-- Show that a double substitution is equivalent to two single substitutions.
+
+-- postulate
+--   double-subst :
+--     ∀ {Γ A B C} {V : Γ ⊢ A} {W : Γ ⊢ B} {N : Γ , A , B ⊢ C} →
+--       N [ V ][ W ] ≡ (N [ rename S_ W ]) [ V ]
+
+-- Note the arguments need to be swapped and W needs to have its context adjusted via renaming in order for the right-hand side to be well typed.
