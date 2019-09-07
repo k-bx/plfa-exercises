@@ -27,6 +27,7 @@ data Type : Set where
   _⇒_   : Type → Type → Type
   Nat   : Type
   _`×_  : Type → Type → Type
+  _`⊎_  : Type → Type → Type
 
 data Context : Set where
   ∅   : Context
@@ -137,6 +138,17 @@ data _⊢_ : Context → Type → Set where
       --------------
     → Γ ⊢ C
 
+  -- sums
+
+  `inj₁ : ∀ {Γ A B}
+    → Γ ⊢ A
+    → Γ ⊢ A `⊎ B
+
+  `inj₂ : ∀ {Γ A B}
+    → Γ ⊢ B
+    → Γ ⊢ A `⊎ B
+
+
 lookup : Context → ℕ → Type
 lookup (Γ , A) zero     =  A
 lookup (Γ , _) (suc n)  =  lookup Γ n
@@ -171,6 +183,8 @@ rename ρ `⟨ M , N ⟩     =  `⟨ rename ρ M , rename ρ N ⟩
 rename ρ (`proj₁ L)     =  `proj₁ (rename ρ L)
 rename ρ (`proj₂ L)     =  `proj₂ (rename ρ L)
 rename ρ (case× L M)    =  case× (rename ρ L) (rename (ext (ext ρ)) M)
+rename ρ (`inj₁ L)      =  `inj₁ ((rename ρ L))
+rename ρ (`inj₂ L)      =  `inj₂ ((rename ρ L))
 
 exts : ∀ {Γ Δ} → (∀ {A} → Γ ∋ A → Δ ⊢ A) → (∀ {A B} → Γ , A ∋ B → Δ , A ⊢ B)
 exts σ Z      =  ` Z
@@ -191,6 +205,8 @@ subst σ `⟨ M , N ⟩     =  `⟨ subst σ M , subst σ N ⟩
 subst σ (`proj₁ L)     =  `proj₁ (subst σ L)
 subst σ (`proj₂ L)     =  `proj₂ (subst σ L)
 subst σ (case× L M)    =  case× (subst σ L) (subst (exts (exts σ)) M)
+subst σ (`inj₁ L)      =  `inj₁ (subst σ L)
+subst σ (`inj₂ L)      =  `inj₂ (subst σ L)
 
 _[_] : ∀ {Γ A B}
   → Γ , A ⊢ B
@@ -350,6 +366,16 @@ data _—→_ : ∀ {Γ A} → (Γ ⊢ A) → (Γ ⊢ A) → Set where
       ---------------------
     → `proj₂ L —→ `proj₂ L′
 
+  ξ-inj₁ : ∀ {Γ A B} {L L′ : Γ ⊢ A `⊎ B}
+    → L —→ L′
+      ---------------------
+    → `inj₁ {Γ} {A} {B} L —→ `inj₁ {Γ} {A} {B} L′
+
+  -- ξ-inj₂ : ∀ {Γ A B} {L L′ : Γ ⊢ A `⊎ B}
+  --   → L —→ L′
+  --     ---------------------
+  --   → `inj₂ L —→ `inj₂ L′
+
   β-proj₁ : ∀ {Γ A B} {V : Γ ⊢ A} {W : Γ ⊢ B}
     → Value V
     → Value W
@@ -464,6 +490,10 @@ progress (`proj₂ L) with progress L
 progress (case× L M) with progress L
 ...    | step L—→L′                         =  step (ξ-case× L—→L′)
 ...    | done (V-⟨ VM , VN ⟩)               =  step (β-case× VM VN)
+progress (`inj₁ L) with progress L
+...    | step L—→N = step {!!}
+...    | done x = {!!}
+progress (`inj₂ L) = {!!}
 
 
 data Gas : Set where
